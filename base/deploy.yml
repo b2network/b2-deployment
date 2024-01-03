@@ -1,0 +1,119 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: statedb
+spec:
+  selector:
+    matchLabels:
+      app: statedb
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: statedb
+    spec:
+      containers:
+      - name: statedb
+        image: postgres:15-alpine
+        volumeMounts:
+        # - name: datadir
+        #   mountPath: /mnt/source
+        - name: init-sql
+          mountPath: /docker-entrypoint-initdb.d/init.sql
+          subPath: init_prover_db.sql
+          readOnly: true
+        env:
+        - name: POSTGRES_USER
+          value: state_user
+        - name: POSTGRES_PASSWORD
+          value: state_password
+        - name: POSTGRES_DB
+          value: state_db
+        resources:
+          limits:
+            cpu: 1
+            memory: 1Gi
+
+      restartPolicy: Always
+      volumes:
+      # - name: datadir
+      #   persistentVolumeClaim:
+      #     claimName: b2-state-db-pvc
+      #     readOnly: false
+      - name: init-sql
+        configMap:
+          name: init-sql
+          optional: false
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pooldb
+spec:
+  selector:
+    matchLabels:
+      app: pooldb
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: pooldb
+    spec:
+      containers:
+      - name: pooldb
+        image: postgres:15-alpine
+        env:
+        - name: POSTGRES_USER
+          value: pool_user
+        - name: POSTGRES_PASSWORD
+          value: pool_password
+        - name: POSTGRES_DB
+          value: pool_db
+        resources:
+          limits:
+            cpu: 1
+            memory: 1Gi
+      restartPolicy: Always
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eventdb
+spec:
+  selector:
+    matchLabels:
+      app: eventdb
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: eventdb
+    spec:
+      containers:
+      - name: eventdb
+        image: postgres:15-alpine
+        volumeMounts:
+        - name: init-sql
+          mountPath: /docker-entrypoint-initdb.d/init.sql
+          subPath: init_event_db.sql
+          readOnly: true
+        env:
+        - name: POSTGRES_USER
+          value: event_user
+        - name: POSTGRES_PASSWORD
+          value: event_password
+        - name: POSTGRES_DB
+          value: event_db
+        resources:
+          limits:
+            cpu: 1
+            memory: 1Gi
+
+      restartPolicy: Always
+      volumes:
+      - name: init-sql
+        configMap:
+          name: init-sql
+          optional: false
