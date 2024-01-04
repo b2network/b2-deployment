@@ -1,6 +1,7 @@
 \pset pager 0
 \d
 \l
+SHOW config_file
 -- select id,status,created_at,updated_at from state.monitored_txs where owner = 'sequencer' order by created_at asc;
 -- select * from state.fork_id order by block_num desc limit 5;
 -- select * from state.trusted_reorg order by timestamp desc limit 5;

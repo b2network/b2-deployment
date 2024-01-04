@@ -31,8 +31,8 @@ spec:
           value: state_db
         resources:
           limits:
-            cpu: 1
-            memory: 1Gi
+            cpu: 0.5
+            memory: 0.5Gi
 
       restartPolicy: Always
       volumes:
@@ -72,8 +72,8 @@ spec:
           value: pool_db
         resources:
           limits:
-            cpu: 1
-            memory: 1Gi
+            cpu: 0.5
+            memory: 0.5Gi
       restartPolicy: Always
 
 ---
@@ -108,8 +108,8 @@ spec:
           value: event_db
         resources:
           limits:
-            cpu: 1
-            memory: 1Gi
+            cpu: 0.5
+            memory: 0.5Gi
 
       restartPolicy: Always
       volumes:
@@ -143,6 +143,43 @@ spec:
             name: l1-bitcoin-component-cm
         resources:
           limits:
-            cpu: 1
-            memory: 1Gi
+            cpu: 0.5
+            memory: 0.5Gi
       restartPolicy: Always
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prover
+spec:
+  selector:
+    matchLabels:
+      app: prover
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: prover
+    spec:
+      containers:
+      - name: prover
+        image: ghcr.io/b2network/b2-zkevm-prover:20231127-164129-7accb0b
+        volumeMounts:
+        - name: config
+          mountPath: /usr/src/app/config.json
+          subPath: prover-config.json
+          readOnly: true
+        args:
+        - -c
+        - /usr/src/app/config.json
+        resources:
+          limits:
+            cpu: 2
+            memory: 2Gi
+      restartPolicy: Always
+      volumes:
+      - name: config
+        configMap:
+          name: prover-config
+          optional: false

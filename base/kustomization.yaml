@@ -13,3 +13,7 @@ configMapGenerator:
 - name: l1-bitcoin-component-cm
   files:
   - ./bitcoin.env
+
+- name: prover-config
+  files:
+  - ./prover-config.json
