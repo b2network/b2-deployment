@@ -117,3 +117,32 @@ spec:
         configMap:
           name: init-sql
           optional: false
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: l1
+spec:
+  selector:
+    matchLabels:
+      app: l1
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: l1
+    spec:
+      containers:
+      - name: l1
+        image: ghcr.io/b2network/b2-node:20231222-145531-18655e6-with-datadir-6baf597
+        command: ["ethermintd", "start"]
+        envFrom:
+        - configMapRef:
+            name: l1-bitcoin-component-cm
+        resources:
+          limits:
+            cpu: 1
+            memory: 1Gi
+      restartPolicy: Always
