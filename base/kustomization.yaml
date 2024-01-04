@@ -14,6 +14,9 @@ configMapGenerator:
   files:
   - ./bitcoin.env
 
-- name: prover-config
+- name: config
   files:
   - ./prover-config.json
+  - ./zkevm-genesis-config.json
+  - ./zkevm-node-config.toml
+  - ./sequencer.keystore

@@ -7,7 +7,13 @@ spec:
   clusterIP: None
   selector:
     app: statedb
-  # ports:
-  # - name: api
-  #   protocol: TCP
-  #   port: 5432
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: l1
+spec:
+  type: ClusterIP
+  clusterIP: None
+  selector:
+    app: l1

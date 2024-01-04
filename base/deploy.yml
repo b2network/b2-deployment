@@ -181,5 +181,46 @@ spec:
       volumes:
       - name: config
         configMap:
-          name: prover-config
+          name: config
           optional: false
+
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: approve
+spec:
+  backoffLimit: 4
+  template:
+    spec:
+      containers:
+      - name: approve
+        image: ghcr.io/b2network/b2-zkevm-node:dev-v0.4.0-RC6-20231222-091319-ca7a25af
+        volumeMounts:
+        - name: config
+          mountPath: /app/config.toml
+          subPath: zkevm-node-config.toml
+          readOnly: true
+        - name: config
+          mountPath: /app/genesis.json
+          subPath: zkevm-genesis-config.json
+          readOnly: true
+        - name: config
+          mountPath: /pk/keystore
+          subPath: sequencer.keystore
+          readOnly: true
+        command:
+        - "/bin/sh"
+        - "-c"
+        - "/app/b2-zkevm-node approve --network custom --custom-network-file /app/genesis.json --key-store-path /pk/keystore --pw testonly --am 115792089237316195423570985008687907853269984665640564039457584007913129639935 -y --cfg /app/config.toml"
+        resources:
+          limits:
+            cpu: 0.5
+            memory: 0.5Gi
+      restartPolicy: OnFailure
+      volumes:
+      - name: config
+        configMap:
+          name: config
+          optional: false
+

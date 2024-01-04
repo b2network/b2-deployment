@@ -1,6 +1,7 @@
 set -x
 ns=b2dev
-app=prover
+# app=prover
+app=approve
 restart(){
     # kustomize -h
     # kustomize build dev
