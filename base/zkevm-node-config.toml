@@ -57,7 +57,7 @@ GlobalQueue = 5242880
 	MaxConns = 200
 
 [Etherman]
-URL = "http://dev-l1:8545"
+URL = "http://l1:8545"
 ForkIDChunkSize = 20000
 MultiGasProvider = false
 	[Etherscan]

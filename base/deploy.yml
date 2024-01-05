@@ -224,3 +224,44 @@ spec:
           name: config
           optional: false
 
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sync
+spec:
+  selector:
+    matchLabels:
+      app: sync
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: sync
+    spec:
+      containers:
+      - name: sync
+        image: ghcr.io/b2network/b2-zkevm-node:dev-v0.4.0-RC6-20231222-091319-ca7a25af
+        volumeMounts:
+        - name: config
+          mountPath: /app/config.toml
+          subPath: zkevm-node-config.toml
+          readOnly: true
+        - name: config
+          mountPath: /app/genesis.json
+          subPath: zkevm-genesis-config.json
+          readOnly: true
+        command:
+        - "/bin/sh"
+        - "-c"
+        - "/app/b2-zkevm-node run --network custom --custom-network-file /app/genesis.json --cfg /app/config.toml --components synchronizer"
+        resources:
+          limits:
+            cpu: 0.5
+            memory: 0.5Gi
+      restartPolicy: Always
+      volumes:
+      - name: config
+        configMap:
+          name: config
+          optional: false
