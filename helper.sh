@@ -2,7 +2,8 @@ set -x
 ns=b2dev
 # app=prover
 # app=approve
-app=sync
+# app=sync
+app=eth-tx-manager
 restart(){
     # kustomize -h
     # kustomize build dev

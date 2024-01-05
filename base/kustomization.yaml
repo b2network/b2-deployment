@@ -20,3 +20,4 @@ configMapGenerator:
   - ./zkevm-genesis-config.json
   - ./zkevm-node-config.toml
   - ./sequencer.keystore
+  - ./aggregator.keystore
