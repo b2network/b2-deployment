@@ -1,7 +1,5 @@
 resources:
 - deploy.yml
-- pv.yml
-- pvc.yml
 - svc.yml
 
 configMapGenerator:

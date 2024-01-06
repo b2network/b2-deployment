@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+    pv.kubernetes.io/bound-by-controller: "yes"
+  creationTimestamp: "2024-01-06T01:41:59Z"
+  finalizers:
+  - kubernetes.io/pv-protection
+  name: b2-state-db-pv
+  resourceVersion: "17154833459"
+  uid: b1722a6a-e0c4-49e0-9f46-c1d3b166bb34
+spec:
+  accessModes:
+  - ReadWriteMany
+  capacity:
+    storage: 200Gi
+  csi:
+    driver: com.tencent.cloud.csi.cfs
+    volumeAttributes:
+      fsid: rmnigibv
+      host: 192.168.0.35
+      path: /data/b2network/v3.0.0-RC3-fork.6
+    volumeHandle: b2-state-db-pv-192.168.0.35
+  persistentVolumeReclaimPolicy: Retain
+  volumeMode: Filesystem
