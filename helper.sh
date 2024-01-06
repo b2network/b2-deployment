@@ -11,6 +11,20 @@ app=sequencer
 
 # conf=dev
 conf=tke
+
+DATE=$(date +%Y%m%d-%H%M%S)
+NET=http://192.168.0.22:30001
+shopt -s expand_aliases
+# alias req="curl -X POST -v --url $NET -H 'Content-Type: application/json;' --data ${2} "
+alias req="curl -X POST --url $NET -H 'Content-Type: application/json' -s --data ${2} "
+
+health(){
+    req '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}' | jq .
+    req '{"jsonrpc":"2.0","method":"net_version","params":[],"id":1}' | jq .
+    req '{"jsonrpc":"2.0","method":"eth_chainId","params":[],"id":1}' | jq .
+    # curl -X POST --url http://127.0.0.1:8123 -H 'Content-Type: application/json' -s --data '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}'
+}
+
 restart(){
     # kustomize -h
     # kustomize build dev
@@ -45,4 +59,17 @@ op(){
     podid=$(kubectl get pod --selector=app=$app -o wide --namespace=$ns --output=json | jq .items[0].metadata.name | tr -d '"')
     kubectl cp b2dev/$podid:/var/lib/postgresql/data/postgresql.conf .
 }
+
+logCollector() {
+    # exec >"$FUNCNAME.log" 2>&1
+    DIR_NAME="log-$DATE"
+    mkdir -p $DIR_NAME
+    # kubectl get pod --namespace b2 --show-labels
+    # kubectl get pod --namespace b2 --output=json
+    name=$(kubectl get pod --namespace $ns --output=json | jq '.items[].metadata.name' | tr -d '"' | xargs)
+    for item in $name; do
+        kubectl logs --namespace b2 $item  > $DIR_NAME/$item
+    done
+}
+
 $@

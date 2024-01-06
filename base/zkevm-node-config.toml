@@ -158,10 +158,10 @@ DefaultGasPriceWei = 1000000
 MaxGasPriceWei = 0
 
 [MTClient]
-URI  = "zkevm-prover:50061"
+URI  = "prover:50061"
 
 [Executor]
-URI = "zkevm-prover:50071"
+URI = "prover:50071"
 MaxGRPCMessageSize = 10000000000
 
 [Metrics]
