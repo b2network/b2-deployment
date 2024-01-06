@@ -15,6 +15,14 @@ spec:
       containers:
       - name: statedb
         image: postgres:15-alpine
+        readinessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - exec pg_isready -U state_user -h localhost
+          initialDelaySeconds: 5
+          periodSeconds: 10
         volumeMounts:
         # - name: datadir
         #   mountPath: /mnt/source
@@ -63,6 +71,14 @@ spec:
       containers:
       - name: pooldb
         image: postgres:15-alpine
+        readinessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - exec pg_isready -U pool_user -h localhost
+          initialDelaySeconds: 5
+          periodSeconds: 10
         env:
         - name: POSTGRES_USER
           value: pool_user
@@ -94,6 +110,14 @@ spec:
       containers:
       - name: eventdb
         image: postgres:15-alpine
+        readinessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - exec pg_isready -U event_user -h localhost
+          initialDelaySeconds: 5
+          periodSeconds: 10
         volumeMounts:
         - name: init-sql
           mountPath: /docker-entrypoint-initdb.d/init.sql
@@ -162,6 +186,10 @@ spec:
       labels:
         app: prover
     spec:
+      initContainers:
+      - name: wait-for-db
+        image: busybox
+        command: ['sh', '-c', 'until nc -z zkevm-state-db.b2.svc.cluster.local 5432; do echo waiting for db; sleep 2; done;']
       containers:
       - name: prover
         image: ghcr.io/b2network/b2-zkevm-prover:20231127-164129-7accb0b
@@ -193,6 +221,10 @@ spec:
   backoffLimit: 4
   template:
     spec:
+      initContainers:
+      - name: wait-for-l1
+        image: busybox
+        command: ['sh', '-c', 'until nc -z l1.b2.svc.cluster.local 8545; do echo waiting for l1; sleep 2; done;']
       containers:
       - name: approve
         image: ghcr.io/b2network/b2-zkevm-node:dev-v0.4.0-RC6-20231222-091319-ca7a25af
@@ -239,6 +271,10 @@ spec:
       labels:
         app: sync
     spec:
+      initContainers:
+      - name: wait-for-l1
+        image: busybox
+        command: ['sh', '-c', 'until nc -z l1.b2.svc.cluster.local 8545; do echo waiting for l1; sleep 2; done;']
       containers:
       - name: sync
         image: ghcr.io/b2network/b2-zkevm-node:dev-v0.4.0-RC6-20231222-091319-ca7a25af
@@ -282,6 +318,13 @@ spec:
       labels:
         app: eth-tx-manager
     spec:
+      initContainers:
+      - name: wait-for-db
+        image: busybox
+        command: ['sh', '-c', 'until nc -z zkevm-state-db.b2.svc.cluster.local 5432; do echo waiting for db; sleep 2; done;']
+      - name: wait-for-l1
+        image: busybox
+        command: ['sh', '-c', 'until nc -z l1.b2.svc.cluster.local 8545; do echo waiting for l1; sleep 2; done;']
       containers:
       - name: eth-tx-manager
         image: ghcr.io/b2network/b2-zkevm-node:dev-v0.4.0-RC6-20231222-091319-ca7a25af
@@ -332,6 +375,13 @@ spec:
       labels:
         app: sequencer
     spec:
+      initContainers:
+      - name: wait-for-state-db
+        image: busybox
+        command: ['sh', '-c', 'until nc -z zkevm-state-db.b2.svc.cluster.local 5432; do echo waiting for db; sleep 2; done;']
+      - name: wait-for-pool-db
+        image: busybox
+        command: ['sh', '-c', 'until nc -z zkevm-pool-db.b2.svc.cluster.local 5432; do echo waiting for db; sleep 2; done;']
       containers:
       - name: sequencer
         image: ghcr.io/b2network/b2-zkevm-node:dev-v0.4.0-RC6-20231222-091319-ca7a25af
@@ -379,6 +429,13 @@ spec:
       labels:
         app: sequence-sender
     spec:
+      initContainers:
+      - name: wait-for-state-db
+        image: busybox
+        command: ['sh', '-c', 'until nc -z zkevm-state-db.b2.svc.cluster.local 5432; do echo waiting for db; sleep 2; done;']
+      - name: wait-for-pool-db
+        image: busybox
+        command: ['sh', '-c', 'until nc -z zkevm-pool-db.b2.svc.cluster.local 5432; do echo waiting for db; sleep 2; done;']
       containers:
       - name: sequence-sender
         image: ghcr.io/b2network/b2-zkevm-node:dev-v0.4.0-RC6-20231222-091319-ca7a25af
@@ -426,6 +483,10 @@ spec:
       labels:
         app: l2gaspricer
     spec:
+      initContainers:
+      - name: wait-for-state-db
+        image: busybox
+        command: ['sh', '-c', 'until nc -z zkevm-state-db.b2.svc.cluster.local 5432; do echo waiting for db; sleep 2; done;']
       containers:
       - name: l2gaspricer
         image: ghcr.io/b2network/b2-zkevm-node:dev-v0.4.0-RC6-20231222-091319-ca7a25af
@@ -472,6 +533,10 @@ spec:
       labels:
         app: aggregator
     spec:
+      initContainers:
+      - name: wait-for-state-db
+        image: busybox
+        command: ['sh', '-c', 'until nc -z zkevm-state-db.b2.svc.cluster.local 5432; do echo waiting for db; sleep 2; done;']
       containers:
       - name: aggregator
         image: ghcr.io/b2network/b2-zkevm-node:dev-v0.4.0-RC6-20231222-091319-ca7a25af
@@ -514,6 +579,10 @@ spec:
       labels:
         app: l2-rpc
     spec:
+      initContainers:
+      - name: wait-for-state-db
+        image: busybox
+        command: ['sh', '-c', 'until nc -z zkevm-state-db.b2.svc.cluster.local 5432; do echo waiting for db; sleep 2; done;']
       containers:
       - name: l2-rpc
         image: ghcr.io/b2network/b2-zkevm-node:dev-v0.4.0-RC6-20231222-091319-ca7a25af
@@ -530,7 +599,6 @@ spec:
         - "/bin/sh"
         - "-c"
         - "/app/b2-zkevm-node run --network custom --custom-network-file /app/genesis.json --cfg /app/config.toml --components rpc"
-
         resources:
           limits:
             cpu: 0.5
