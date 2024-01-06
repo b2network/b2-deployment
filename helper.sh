@@ -3,7 +3,8 @@ ns=b2dev
 # app=prover
 # app=approve
 # app=sync
-app=eth-tx-manager
+# app=eth-tx-manager
+app=sequence-sender
 restart(){
     # kustomize -h
     # kustomize build dev
