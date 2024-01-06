@@ -1,22 +1,28 @@
 set -x
-ns=b2dev
+
+# ns=b2dev
+ns=b2
+
 # app=prover
 # app=approve
 # app=sync
 # app=eth-tx-manager
-app=sequence-sender
+app=sequencer
+
+# conf=dev
+conf=tke
 restart(){
     # kustomize -h
     # kustomize build dev
     # return
-    kubectl delete -k dev
+    kubectl delete -k $conf
     sleep 2
-    kubectl apply -k dev
+    kubectl apply -k $conf
     return
 }
 
 probe(){
-    # exec >"$FUNCNAME.log" 2>&1
+    exec >"$FUNCNAME.log" 2>&1
     podid=$(kubectl get pod --selector=app=$app -o wide --namespace=$ns --output=json | jq .items[0].metadata.name | tr -d '"')
     kubectl logs $podid --namespace=$ns
     # kubectl describe pod $podid --namespace=$ns

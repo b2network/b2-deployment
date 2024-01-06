@@ -1,0 +1,219 @@
+resources:
+- pv.yml
+- pvc.yml
+- ../base
+
+namespace: b2
+
+patchesJson6902:
+# cpu
+  - target:
+      version: v1
+      kind: Deployment
+      name: statedb
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/cpu
+        value: 4
+  - target:
+      version: v1
+      kind: Deployment
+      name: pooldb
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/cpu
+        value: 4
+  - target:
+      version: v1
+      kind: Deployment
+      name: eventdb
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/cpu
+        value: 4
+  - target:
+      version: v1
+      kind: Deployment
+      name: l1
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/cpu
+        value: 4
+  - target:
+      version: v1
+      kind: Deployment
+      name: prover
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/cpu
+        value: 40
+  - target:
+      version: batch/v1
+      kind: Job
+      name: approve
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/cpu
+        value: 40
+  - target:
+      version: v1
+      kind: Deployment
+      name: sync
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/cpu
+        value: 8
+  - target:
+      version: v1
+      kind: Deployment
+      name: eth-tx-manager
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/cpu
+        value: 8
+  - target:
+      version: v1
+      kind: Deployment
+      name: sequencer
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/cpu
+        value: 8
+  - target:
+      version: v1
+      kind: Deployment
+      name: sequence-sender
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/cpu
+        value: 8
+  - target:
+      version: v1
+      kind: Deployment
+      name: l2gaspricer
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/cpu
+        value: 8
+  - target:
+      version: v1
+      kind: Deployment
+      name: aggregator
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/cpu
+        value: 8
+  - target:
+      version: v1
+      kind: Deployment
+      name: l2-rpc
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/cpu
+        value: 8
+
+# memory
+  - target:
+      version: v1
+      kind: Deployment
+      name: statedb
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/memory
+        value: 4Gi
+  - target:
+      version: v1
+      kind: Deployment
+      name: pooldb
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/memory
+        value: 4Gi
+  - target:
+      version: v1
+      kind: Deployment
+      name: eventdb
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/memory
+        value: 4Gi
+  - target:
+      version: v1
+      kind: Deployment
+      name: l1
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/memory
+        value: 4Gi
+  - target:
+      version: v1
+      kind: Deployment
+      name: prover
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/memory
+        value: 32Gi
+  - target:
+      version: batch/v1
+      kind: Job
+      name: approve
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/memory
+        value: 1Gi
+  - target:
+      version: v1
+      kind: Deployment
+      name: sync
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/memory
+        value: 8Gi
+  - target:
+      version: v1
+      kind: Deployment
+      name: eth-tx-manager
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/memory
+        value: 8Gi
+  - target:
+      version: v1
+      kind: Deployment
+      name: sequencer
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/memory
+        value: 8Gi
+  - target:
+      version: v1
+      kind: Deployment
+      name: sequence-sender
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/memory
+        value: 8Gi
+  - target:
+      version: v1
+      kind: Deployment
+      name: l2gaspricer
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/memory
+        value: 2Gi
+  - target:
+      version: v1
+      kind: Deployment
+      name: aggregator
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/memory
+        value: 8Gi
+  - target:
+      version: v1
+      kind: Deployment
+      name: l2-rpc
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/memory
+        value: 8Gi
