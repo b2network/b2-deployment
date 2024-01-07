@@ -46,7 +46,7 @@ patchesJson6902:
     patch: |-
       - op: replace
         path: /spec/template/spec/containers/0/resources/limits/cpu
-        value: 40
+        value: 120
   - target:
       version: batch/v1
       kind: Job
@@ -152,7 +152,7 @@ patchesJson6902:
     patch: |-
       - op: replace
         path: /spec/template/spec/containers/0/resources/limits/memory
-        value: 32Gi
+        value: 480Gi
   - target:
       version: batch/v1
       kind: Job

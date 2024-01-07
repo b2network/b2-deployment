@@ -1,13 +1,75 @@
+---
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: b2-state-db-pvc
+  name: prover-config-pvc
 spec:
   accessModes:
   - ReadWriteMany
   resources:
     requests:
       storage: 200Gi
-  volumeName: b2-state-db-pv
+  volumeName: prover-config-pv
+  storageClassName: ""
+  volumeMode: Filesystem
+
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: b2-node-datadir-pvc
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 200Gi
+  volumeName: b2-node-datadir-pv
+  storageClassName: ""
+  volumeMode: Filesystem
+
+
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: b2-db-event-datadir-pvc
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 200Gi
+  volumeName: b2-db-event-datadir-pv
+  storageClassName: ""
+  volumeMode: Filesystem
+
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: b2-db-pool-datadir-pvc
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 200Gi
+  volumeName: b2-db-pool-datadir-pv
+  storageClassName: ""
+  volumeMode: Filesystem
+
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: b2-db-state-datadir-pvc
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 200Gi
+  volumeName: b2-db-state-datadir-pv
   storageClassName: ""
   volumeMode: Filesystem

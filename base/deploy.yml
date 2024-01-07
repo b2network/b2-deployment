@@ -24,8 +24,9 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 10
         volumeMounts:
-        # - name: datadir
-        #   mountPath: /mnt/source
+        - name: datadir
+          mountPath: /var/lib/postgresql/data
+          readOnly: false
         - name: init-sql
           mountPath: /docker-entrypoint-initdb.d/init.sql
           subPath: init_prover_db.sql
@@ -41,13 +42,12 @@ spec:
           limits:
             cpu: 0.5
             memory: 0.5Gi
-
       restartPolicy: Always
       volumes:
-      # - name: datadir
-      #   persistentVolumeClaim:
-      #     claimName: b2-state-db-pvc
-      #     readOnly: false
+      - name: datadir
+        persistentVolumeClaim:
+          claimName: b2-db-state-datadir-pvc
+          readOnly: false
       - name: init-sql
         configMap:
           name: init-sql
@@ -79,6 +79,10 @@ spec:
             - exec pg_isready -U pool_user -h localhost
           initialDelaySeconds: 5
           periodSeconds: 10
+        volumeMounts:
+        - name: datadir
+          mountPath: /var/lib/postgresql/data
+          readOnly: false
         env:
         - name: POSTGRES_USER
           value: pool_user
@@ -91,6 +95,11 @@ spec:
             cpu: 0.5
             memory: 0.5Gi
       restartPolicy: Always
+      volumes:
+      - name: datadir
+        persistentVolumeClaim:
+          claimName: b2-db-pool-datadir-pvc
+          readOnly: false
 
 ---
 apiVersion: apps/v1
@@ -119,6 +128,9 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 10
         volumeMounts:
+        - name: datadir
+          mountPath: /var/lib/postgresql/data
+          readOnly: false
         - name: init-sql
           mountPath: /docker-entrypoint-initdb.d/init.sql
           subPath: init_event_db.sql
@@ -134,14 +146,16 @@ spec:
           limits:
             cpu: 0.5
             memory: 0.5Gi
-
       restartPolicy: Always
       volumes:
       - name: init-sql
         configMap:
           name: init-sql
           optional: false
-
+      - name: datadir
+        persistentVolumeClaim:
+          claimName: b2-db-event-datadir-pvc
+          readOnly: false
 
 ---
 apiVersion: apps/v1
@@ -160,8 +174,12 @@ spec:
     spec:
       containers:
       - name: l1
-        image: ghcr.io/b2network/b2-node:20231222-145531-18655e6-with-datadir-6baf597
+        image: ghcr.io/b2network/b2-node:20231222-145531-18655e6
         command: ["ethermintd", "start"]
+        volumeMounts:
+        - name: datadir
+          mountPath: /root/.ethermintd
+          readOnly: false
         envFrom:
         - configMapRef:
             name: l1-bitcoin-component-cm
@@ -170,6 +188,11 @@ spec:
             cpu: 0.5
             memory: 0.5Gi
       restartPolicy: Always
+      volumes:
+      - name: datadir
+        persistentVolumeClaim:
+          claimName: b2-node-datadir-pvc
+          readOnly: false
 
 ---
 apiVersion: apps/v1
@@ -194,6 +217,9 @@ spec:
       - name: prover
         image: ghcr.io/b2network/b2-zkevm-prover:20231127-164129-7accb0b
         volumeMounts:
+        - name: prover-config
+          mountPath: /app/config
+          readOnly: true
         - name: config
           mountPath: /usr/src/app/config.json
           subPath: prover-config.json
@@ -207,6 +233,10 @@ spec:
             memory: 2Gi
       restartPolicy: Always
       volumes:
+      - name: prover-config
+        persistentVolumeClaim:
+          claimName: prover-config-pvc
+          readOnly: false
       - name: config
         configMap:
           name: config
