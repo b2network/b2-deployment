@@ -194,6 +194,9 @@ spec:
       - name: prover
         image: ghcr.io/b2network/b2-zkevm-prover:20231127-164129-7accb0b
         volumeMounts:
+        - name: prover-config
+          mountPath: /app/config
+          readOnly: true
         - name: config
           mountPath: /usr/src/app/config.json
           subPath: prover-config.json
@@ -207,6 +210,10 @@ spec:
             memory: 2Gi
       restartPolicy: Always
       volumes:
+      - name: prover-config
+        persistentVolumeClaim:
+          claimName: prover-config-pvc
+          readOnly: false
       - name: config
         configMap:
           name: config

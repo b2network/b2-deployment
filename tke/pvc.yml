@@ -1,13 +1,13 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: b2-state-db-pvc
+  name: prover-config-pvc
 spec:
   accessModes:
   - ReadWriteMany
   resources:
     requests:
       storage: 200Gi
-  volumeName: b2-state-db-pv
+  volumeName: prover-config-pv
   storageClassName: ""
   volumeMode: Filesystem
