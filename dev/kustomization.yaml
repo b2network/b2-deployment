@@ -1,0 +1,5 @@
+resources:
+- pv.yml
+- pvc.yml
+- ../base
+namespace: b2dev

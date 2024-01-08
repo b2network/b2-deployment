@@ -1,0 +1,102 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: prover-config-pv
+spec:
+  accessModes:
+  - ReadWriteMany
+  capacity:
+    storage: 200Gi
+  csi:
+    driver: com.tencent.cloud.csi.cfs
+    volumeAttributes:
+      fsid: rmnigibv
+      host: 192.168.0.35
+      path: /b2network/v3.0.0-RC3-fork.6/config
+    volumeHandle: prover-config-pv-192.168.0.35
+  persistentVolumeReclaimPolicy: Retain
+  volumeMode: Filesystem
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: b2-node-datadir-pv
+spec:
+  accessModes:
+  - ReadWriteMany
+  capacity:
+    storage: 200Gi
+  csi:
+    driver: com.tencent.cloud.csi.cfs
+    volumeAttributes:
+      fsid: rmnigibv
+      host: 192.168.0.35
+      path: /b2network/app-data/b2-node
+    volumeHandle: b2network/app-data/b2-node-192.168.0.35
+  persistentVolumeReclaimPolicy: Retain
+  volumeMode: Filesystem
+
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: b2-db-event-datadir-pv
+spec:
+  accessModes:
+  - ReadWriteMany
+  capacity:
+    storage: 200Gi
+  csi:
+    driver: com.tencent.cloud.csi.cfs
+    volumeAttributes:
+      fsid: rmnigibv
+      host: 192.168.0.35
+      path: /b2network/app-data/db-event
+    volumeHandle: b2network/app-data/db-event-192.168.0.35
+  persistentVolumeReclaimPolicy: Retain
+  volumeMode: Filesystem
+
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: b2-db-pool-datadir-pv
+spec:
+  accessModes:
+  - ReadWriteMany
+  capacity:
+    storage: 200Gi
+  csi:
+    driver: com.tencent.cloud.csi.cfs
+    volumeAttributes:
+      fsid: rmnigibv
+      host: 192.168.0.35
+      path: /b2network/app-data/db-pool
+    volumeHandle: b2network/app-data/db-pool-192.168.0.35
+  persistentVolumeReclaimPolicy: Retain
+  volumeMode: Filesystem
+
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: b2-db-state-datadir-pv
+spec:
+  accessModes:
+  - ReadWriteMany
+  capacity:
+    storage: 200Gi
+  csi:
+    driver: com.tencent.cloud.csi.cfs
+    volumeAttributes:
+      fsid: rmnigibv
+      host: 192.168.0.35
+      path: /b2network/app-data/db-state
+    volumeHandle: b2network/app-data/db-state-192.168.0.35
+  persistentVolumeReclaimPolicy: Retain
+  volumeMode: Filesystem
