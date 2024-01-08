@@ -1,0 +1,21 @@
+resources:
+- deploy.yml
+- svc.yml
+
+configMapGenerator:
+- name: init-sql
+  files:
+  - ./init_prover_db.sql
+  - ./init_event_db.sql
+
+- name: l1-bitcoin-component-cm
+  files:
+  - ./bitcoin.env
+
+- name: config
+  files:
+  - ./prover-config.json
+  - ./zkevm-genesis-config.json
+  - ./zkevm-node-config.toml
+  - ./sequencer.keystore
+  - ./aggregator.keystore

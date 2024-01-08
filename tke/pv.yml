@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: prover-config-pv
+spec:
+  accessModes:
+  - ReadWriteMany
+  capacity:
+    storage: 200Gi
+  csi:
+    driver: com.tencent.cloud.csi.cfs
+    volumeAttributes:
+      fsid: rmnigibv
+      host: 192.168.0.35
+      path: /b2network/v3.0.0-RC3-fork.6/config
+    volumeHandle: prover-config-pv-192.168.0.35
+  persistentVolumeReclaimPolicy: Retain
+  volumeMode: Filesystem
